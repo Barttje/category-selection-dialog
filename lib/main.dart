@@ -32,21 +32,22 @@ class CategorySelector extends StatefulWidget {
 }
 
 class _CategorySelectorState extends State<CategorySelector> {
-  final selectedCategories = List<String>();
+  final List<String> selectedCategories = [];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RaisedButton(
+        ElevatedButton(
           child: Text("Select Fruit"),
           onPressed: () async {
             List<String> categories = await showDialog(
               context: this.context,
-              child: new Dialog(
-                child: CategorySelectorDialog(
-                    widget.categories, List.from(selectedCategories)),
-              ),
+              builder: (BuildContext context) {
+                return new Dialog(
+                    child: CategorySelectorDialog(
+                        widget.categories, List.from(selectedCategories)));
+              },
             );
             setState(() {
               selectedCategories.clear();
@@ -97,7 +98,7 @@ class CategorySelectorDialog extends StatefulWidget {
 }
 
 class _CategorySelectorDialogState extends State<CategorySelectorDialog> {
-  final _selectedCategories = List<String>();
+  final List<String> _selectedCategories = [];
 
   @override
   void initState() {
@@ -107,10 +108,12 @@ class _CategorySelectorDialogState extends State<CategorySelectorDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Flexible(
-          child: ListView.builder(
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: 350, minHeight: 200),
+      child: Column(
+        children: [
+          ListView.builder(
+              shrinkWrap: true,
               itemCount: widget.categories.length,
               itemBuilder: (BuildContext context, int index) {
                 return CheckboxListTile(
@@ -127,20 +130,25 @@ class _CategorySelectorDialogState extends State<CategorySelectorDialog> {
                   title: Text(widget.categories[index]),
                 );
               }),
-        ),
-        RaisedButton(
-          onPressed: () {
-            Navigator.pop(context, widget.currentSelection);
-          },
-          child: Text("Cancel"),
-        ),
-        RaisedButton(
-          onPressed: () {
-            Navigator.pop(context, _selectedCategories);
-          },
-          child: Text("Done"),
-        )
-      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, widget.currentSelection);
+                },
+                child: Text("Cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, _selectedCategories);
+                },
+                child: Text("Done"),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
