@@ -59,9 +59,7 @@ class _CategorySelectorState extends State<CategorySelector> {
           color: Colors.green,
           height: 2,
         ),
-        SelectedCategories(
-          categories: selectedCategories,
-        )
+        SelectedCategories(selectedCategories)
       ],
     );
   }
@@ -70,7 +68,7 @@ class _CategorySelectorState extends State<CategorySelector> {
 class SelectedCategories extends StatelessWidget {
   final List<String> categories;
 
-  const SelectedCategories({Key key, this.categories}) : super(key: key);
+  const SelectedCategories(this.categories);
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +116,9 @@ class _CategorySelectorDialogState extends State<CategorySelectorDialog> {
               itemBuilder: (BuildContext context, int index) {
                 return CheckboxListTile(
                   value: _selectedCategories.contains(widget.categories[index]),
-                  onChanged: (bool selected) {
+                  onChanged: (bool? selected) {
                     setState(() {
-                      if (selected) {
+                      if (selected == true) {
                         _selectedCategories.add(widget.categories[index]);
                       } else {
                         _selectedCategories.remove(widget.categories[index]);
